@@ -1,14 +1,102 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GameWindow extends JPanel implements Runnable{
-    public static int GAME_WIDTH = 750;
-    public static int GAME_HEIGHT = 1250;
+    public static int GAME_WIDTH = 500;
+    public static int GAME_HEIGHT = 700;
+    public static Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
+    public static int PADDLE_WIDTH = 50;
+    public static int PADDLE_HEIGHT = 14;
+    public static int BRICK_WIDTH = 30;
+    public static int BRICK_HEIGHT = 8;
+    public static int BALL_DIAMETER = 12;
+    Ball ball;
+    Score score;
+    Paddle paddle;
+    Graphics graphics;
+    Thread gameThread;
+    Image image;
+    Brick[][] bricks = new Brick[14][8];
 
     public GameWindow() {
+        this.setPreferredSize(SCREEN_SIZE);
+        this.setFocusable(true);
+        this.addKeyListener(new ActionListener());
+        ball = new Ball();
+        paddle = new Paddle((GAME_WIDTH/2)-(PADDLE_WIDTH/2),650, PADDLE_WIDTH,PADDLE_HEIGHT);
+        score = new Score();
+        for (int i = 0; i < 14; i++){
+            for (int j = 0; j < 8; j++){
+                if (j < 2){
+                    bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.RED);
+                }else if(j < 4){
+                    bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.ORANGE);
+                }
+                else if(j < 6){
+                    bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.GREEN);
+                }
+                else if(j < 8){
+                    bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.YELLOW);
+                }
+            }
+        }
+
+        gameThread = new Thread();
+        gameThread.start();
+    }
+
+    public void paint(Graphics g){
+        image = createImage(getWidth(),getHeight());
+        graphics = image.getGraphics();
+        draw(graphics);
+        g.drawImage(image,0,0,this);
+    }
+
+    public void draw(Graphics g){
+        paddle.draw(g);
+        for (int i = 0; i < 14; i++) {
+            for (int j = 0; j < 8; j++) {
+                bricks[i][j].draw(g);
+            }
+        }
+    }
+
+    public void checkCollision(){
+
+    }
+
+    public void move(){
+        paddle.move();
     }
 
     @Override
     public void run() {
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        while (true){
+            long now = System.nanoTime();
+            delta  += (now - lastTime)/ns;
+            lastTime = now;
+            if (delta >= 1){
+                move();
+                checkCollision();
+                repaint();
+                delta--;
+            }
+        }
+    }
 
+    class ActionListener extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            paddle.keyPressed(e);
+        }
+
+        public void keyReleased(KeyEvent e) {
+            paddle.keyReleased(e);
+        }
     }
 }

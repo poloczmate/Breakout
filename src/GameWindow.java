@@ -28,7 +28,7 @@ public class GameWindow extends JPanel implements Runnable{
         this.addKeyListener(new ActionListener());
         ball = new Ball(random.nextInt(GAME_WIDTH-BALL_DIAMETER) + BALL_DIAMETER/2,600,BALL_DIAMETER);
         paddle = new Paddle((GAME_WIDTH/2)-(PADDLE_WIDTH/2),650, PADDLE_WIDTH,PADDLE_HEIGHT);
-        score = new Score();
+        score = new Score(GAME_WIDTH,GAME_HEIGHT);
         for (int i = 0; i < 14; i++){
             for (int j = 0; j < 8; j++){
                 if (j < 2){
@@ -64,6 +64,7 @@ public class GameWindow extends JPanel implements Runnable{
             }
         }
         ball.draw(g);
+        score.draw(g);
     }
 
     public void checkCollision(){
@@ -95,6 +96,7 @@ public class GameWindow extends JPanel implements Runnable{
                     bricks[i][j].isAlive = false;
                     bricks[i][j].color = Color.BLACK;
                     bricks[j][j].draw(graphics);
+                    score.crashedBricks++;
                 }
             }
         }

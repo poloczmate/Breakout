@@ -5,6 +5,12 @@ public class Ball extends Rectangle{
     int xVelocity;
     int yVelocity;
 
-    public Ball() {
+    public Ball(int x, int y, int width) {
+        super(x,y,width,width);
+    }
+
+    public void draw(Graphics g){
+        g.setColor(Color.WHITE);
+        g.fillOval(x,y,width,height);
     }
 }

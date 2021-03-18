@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class GameWindow extends JPanel implements Runnable{
     public static int GAME_WIDTH = 500;
@@ -19,12 +20,13 @@ public class GameWindow extends JPanel implements Runnable{
     Thread gameThread;
     Image image;
     Brick[][] bricks = new Brick[14][8];
+    Random random = new Random();
 
     public GameWindow() {
         this.setPreferredSize(SCREEN_SIZE);
         this.setFocusable(true);
         this.addKeyListener(new ActionListener());
-        ball = new Ball();
+        ball = new Ball(random.nextInt(GAME_WIDTH-BALL_DIAMETER) + BALL_DIAMETER/2,600,BALL_DIAMETER);
         paddle = new Paddle((GAME_WIDTH/2)-(PADDLE_WIDTH/2),650, PADDLE_WIDTH,PADDLE_HEIGHT);
         score = new Score();
         for (int i = 0; i < 14; i++){
@@ -61,6 +63,7 @@ public class GameWindow extends JPanel implements Runnable{
                 bricks[i][j].draw(g);
             }
         }
+        ball.draw(g);
     }
 
     public void checkCollision(){

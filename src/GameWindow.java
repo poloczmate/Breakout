@@ -84,6 +84,11 @@ public class GameWindow extends JPanel implements Runnable{
             //else ball.yVelocity += 1;
         }
 
+        //ball is outside
+        if (ball.y >= GAME_HEIGHT-BALL_DIAMETER){
+            score.ballOut = true;
+        }
+
         //paddle leave the map
         if (paddle.x <= 0) paddle.x = 0;
         else if(paddle.x > GAME_WIDTH-PADDLE_WIDTH) paddle.x = GAME_WIDTH-PADDLE_WIDTH;

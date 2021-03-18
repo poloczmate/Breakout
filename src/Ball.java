@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class Ball extends Rectangle{
-    int speed = 2;
+    int speed = 4;
     int xVelocity;
     int yVelocity;
     Random random = new Random();

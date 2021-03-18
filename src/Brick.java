@@ -2,6 +2,7 @@ import java.awt.*;
 
 public class Brick extends Rectangle {
     Color color;
+    Boolean isAlive = true;
     public Brick(int x, int y, int width, int height, Color color) {
         super(x,y,width,height);
         this.color = color;

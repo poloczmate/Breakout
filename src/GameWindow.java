@@ -67,6 +67,37 @@ public class GameWindow extends JPanel implements Runnable{
     }
 
     public void checkCollision(){
+        //Ball bounce back from wall
+        if (ball.x <= 0){
+            ball.xVelocity = -ball.xVelocity;
+        }else if (ball.x >= GAME_WIDTH-BALL_DIAMETER){
+            ball.xVelocity = -ball.xVelocity;
+        }
+        if (ball.y <= 0) ball.yVelocity = -ball.yVelocity;
+
+        //Ball bounce back from paddle
+        if (ball.intersects(paddle)) {
+            ball.yVelocity = -ball.yVelocity;
+            //bigger speed
+            //if (ball.yVelocity < 0) ball.yVelocity -= 1;
+            //else ball.yVelocity += 1;
+        }
+
+        //paddle leave the map
+        if (paddle.x <= 0) paddle.x = 0;
+        else if(paddle.x > GAME_WIDTH-PADDLE_WIDTH) paddle.x = GAME_WIDTH-PADDLE_WIDTH;
+
+        //Ball crashes Brick
+        for (int i = 0; i < 14; i++){
+            for (int j = 0; j < 8; j++){
+                if (ball.intersects(bricks[i][j]) && bricks[i][j].isAlive){
+                    ball.yVelocity = -ball.yVelocity;
+                    bricks[i][j].isAlive = false;
+                    bricks[i][j].color = Color.BLACK;
+                    bricks[j][j].draw(graphics);
+                }
+            }
+        }
 
     }
 

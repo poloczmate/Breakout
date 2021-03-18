@@ -8,11 +8,12 @@ public class GameWindow extends JPanel implements Runnable{
     public static int GAME_WIDTH = 500;
     public static int GAME_HEIGHT = 700;
     public static Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
-    public static int PADDLE_WIDTH = 50;
+    public static int PADDLE_WIDTH = 70;
     public static int PADDLE_HEIGHT = 14;
     public static int BRICK_WIDTH = 30;
     public static int BRICK_HEIGHT = 8;
     public static int BALL_DIAMETER = 12;
+    int speedOfGame = 250;
     Ball ball;
     Score score;
     Paddle paddle;
@@ -33,13 +34,13 @@ public class GameWindow extends JPanel implements Runnable{
             for (int j = 0; j < 8; j++){
                 if (j < 2){
                     bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.RED);
-                }else if(j < 4){
+                }else if(j < 4 && j > 1){
                     bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.ORANGE);
                 }
-                else if(j < 6){
+                else if(j < 6 && j > 3){
                     bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.GREEN);
                 }
-                else if(j < 8){
+                else if(j < 8&& j > 5){
                     bricks[i][j] = new Brick(7 + (i * 35), 3 + (j*17), BRICK_WIDTH, BRICK_HEIGHT, Color.YELLOW);
                 }
             }
@@ -96,16 +97,38 @@ public class GameWindow extends JPanel implements Runnable{
         //Ball crashes Brick
         for (int i = 0; i < 14; i++){
             for (int j = 0; j < 8; j++){
-                if (ball.intersects(bricks[i][j]) && bricks[i][j].isAlive){
+                //the top of the ball hits the bottom of the brick
+                if ((ball.y == bricks[i][j].y + BRICK_HEIGHT)
+                        && ((ball.x >= bricks[i][j].x && ball.x <= bricks[i][j].x + BRICK_WIDTH)
+                        || (ball.x + BALL_DIAMETER >= bricks[i][j].x && ball.x + BALL_DIAMETER <= bricks[i][j].x + BRICK_WIDTH)) && bricks[i][j].isAlive){
                     ball.yVelocity = -ball.yVelocity;
-                    bricks[i][j].isAlive = false;
-                    bricks[i][j].color = Color.BLACK;
-                    bricks[j][j].draw(graphics);
-                    score.crashedBricks++;
+                    crashBrick(i,j);
+                }
+                else if ((ball.x == bricks[i][j].x + BRICK_WIDTH) //the left side of the ball hits the right side of the brick
+                        && ((ball.y >= bricks[i][j].y && ball.y <= bricks[i][j].y + BRICK_HEIGHT)
+                        || (ball.y + BALL_DIAMETER >= bricks[i][j].y && ball.y + BALL_DIAMETER <= bricks[i][j].y + BRICK_HEIGHT)) && bricks[i][j].isAlive){
+                    ball.xVelocity = Math.abs(ball.xVelocity);
+                    crashBrick(i,j);
+                } else if ((ball.x + BALL_DIAMETER == bricks[i][j].x) //the right side of the ball hits the left side of the brick
+                        && ((ball.y >= bricks[i][j].y && ball.y <= bricks[i][j].y + BRICK_HEIGHT)
+                        || (ball.y + BALL_DIAMETER >= bricks[i][j].y && ball.y + BALL_DIAMETER <= bricks[i][j].y + BRICK_HEIGHT)) && bricks[i][j].isAlive){
+                    ball.xVelocity = -ball.xVelocity;
+                    crashBrick(i,j);
+                } else if ((ball.y + BALL_DIAMETER == bricks[i][j].y) //the bottom of the ball hits the top of the brick
+                        && ((ball.x >= bricks[i][j].x && ball.x <= bricks[i][j].x + BRICK_WIDTH)
+                        || (ball.x + BALL_DIAMETER >= bricks[i][j].x && ball.x + BALL_DIAMETER <= bricks[i][j].x + BRICK_WIDTH)) && bricks[i][j].isAlive){
+                    ball.yVelocity = -ball.yVelocity;
+                    crashBrick(i,j);
                 }
             }
         }
+    }
 
+    public void crashBrick(int i, int j){
+        bricks[i][j].isAlive = false;
+        bricks[i][j].color = Color.BLACK;
+        bricks[i][j].draw(graphics);
+        score.crashedBricks++;
     }
 
     public void move(){
@@ -116,8 +139,7 @@ public class GameWindow extends JPanel implements Runnable{
     @Override
     public void run() {
         long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
+        double ns = 1000000000 / speedOfGame;
         double delta = 0;
         while (true){
             long now = System.nanoTime();

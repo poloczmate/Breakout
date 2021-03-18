@@ -2,7 +2,6 @@ import java.awt.*;
 import java.util.Random;
 
 public class Ball extends Rectangle{
-    int speed = 4;
     int xVelocity;
     int yVelocity;
     Random random = new Random();
@@ -10,9 +9,9 @@ public class Ball extends Rectangle{
     public Ball(int x, int y, int width) {
         super(x,y,width,width);
         if (random.nextBoolean()){
-            setXDirection(1 * speed);
+            setXDirection(1);
         }else{
-            setXDirection(-1 * speed);
+            setXDirection(-1);
         }
         setYDirrection(-1);
     }

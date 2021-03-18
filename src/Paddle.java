@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Paddle extends Rectangle{
-    int speed = 10;
+    int speed = 2;
     int xVelocity;
 
     public Paddle(int x, int y, int width, int height) {

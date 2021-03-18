@@ -45,7 +45,7 @@ public class GameWindow extends JPanel implements Runnable{
             }
         }
 
-        gameThread = new Thread();
+        gameThread = new Thread(this);
         gameThread.start();
     }
 

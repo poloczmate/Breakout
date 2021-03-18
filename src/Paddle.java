@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 public class Paddle extends Rectangle{
     int speed = 10;
     int xVelocity;
+
     public Paddle(int x, int y, int width, int height) {
         super(x,y,width,height);
     }
@@ -13,11 +14,27 @@ public class Paddle extends Rectangle{
         g.fillRect(x,y,width,height);
     }
 
-    public void keyPressed(KeyEvent e){
+    public void setDirection(int v){
+        xVelocity = v;
+    }
 
+    public void keyPressed(KeyEvent e){
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+            setDirection(speed);
+            move();
+        }else if(e.getKeyCode() == KeyEvent.VK_LEFT){
+            setDirection(-speed);
+            move();
+        }
     }
     public void keyReleased(KeyEvent e){
-
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+            setDirection(0);
+            move();
+        }else if(e.getKeyCode() == KeyEvent.VK_LEFT){
+            setDirection(0);
+            move();
+        }
     }
 
     public void move(){

@@ -72,6 +72,7 @@ public class GameWindow extends JPanel implements Runnable{
 
     public void move(){
         paddle.move();
+        ball.move();
     }
 
     @Override

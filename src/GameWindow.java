@@ -80,9 +80,6 @@ public class GameWindow extends JPanel implements Runnable{
         //Ball bounce back from paddle
         if (ball.intersects(paddle)) {
             ball.yVelocity = -ball.yVelocity;
-            //bigger speed
-            //if (ball.yVelocity < 0) ball.yVelocity -= 1;
-            //else ball.yVelocity += 1;
         }
 
         //ball is outside
